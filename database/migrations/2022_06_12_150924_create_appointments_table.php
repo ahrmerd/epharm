@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Patient::class);
             $table->foreignIdFor(User::class);
             $table->dateTime('date_time');
+            $table->unsignedTinyInteger('status');
             $table->string('reason');
             $table->timestamps();
         });

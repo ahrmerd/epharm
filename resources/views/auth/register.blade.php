@@ -47,9 +47,9 @@
             </div>
 
             <div>
-                <x-label for="address" value="User Type" />
-                <x-select id="address" class="block mt-1 w-full" type="text" name="user_type" :data=$user_types
-                    :value="old('address')" required />
+                <x-label for="user_type" value="User Type" />
+                <x-select id="user_type" class="block mt-1 w-full" name="user_type" :data=$user_types :value="old('user_type')"
+                    required />
             </div>
 
 

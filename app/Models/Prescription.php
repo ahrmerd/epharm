@@ -9,7 +9,7 @@ class Prescription extends Model
 {
     use HasFactory;
 
-    public function doctors()
+    public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
@@ -19,7 +19,12 @@ class Prescription extends Model
         return $this->belongsTo(User::class, 'pharmacist_id');
     }
 
-    public function patients()
+    public function medications()
+    {
+        return $this->hasMany(Medication::class);
+    }
+
+    public function patient()
     {
         return $this->belongsTo(Patient::class);
     }

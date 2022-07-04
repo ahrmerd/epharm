@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Appointment;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAppointmentRequest extends FormRequest
@@ -13,7 +15,7 @@ class UpdateAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,11 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id' => ['required', 'exists:users,id'],
+            'patient_id' => ['required', 'exists:patients,id'],
+            'date_time' => ['required', 'date'],
+            'status' => ['required', 'string', 'max:255', Rule::in(Appointment::APPOINTMENT_STATUSES)],
+            'reason' => ['required', 'string']
         ];
     }
 }

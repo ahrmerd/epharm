@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Http\Requests\UpdatePrescriptionRequest;
 use App\Models\Prescription;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class PrescriptionController extends Controller
 {
@@ -15,7 +18,20 @@ class PrescriptionController extends Controller
      */
     public function index()
     {
-        return view('prescriptions.index', ['prescriptions' => Prescription::all()]);
+        return view('prescriptions.index', ['prescriptions' => Prescription::paginate()]);
+    }
+
+
+    /**
+     * Display a listing of the  resource belonging to the user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function user()
+    {
+        $user = Auth::user();
+        return view('prescriptions.index', ['prescriptions' => auth()->user()->prescriptions()->paginate()]);
+        // return view('prescriptions.index', ['user' => $user, 'prescriptions' => $user->isDoctorOrPharmacist() ? auth()->user()->prescriptions()->paginate() : new Collection([])]);
     }
 
     /**
@@ -25,7 +41,7 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
-        return view('prescriptions.create');
+        return view('prescriptions.create', ['patient' => null]);
     }
 
     /**
@@ -36,6 +52,8 @@ class PrescriptionController extends Controller
      */
     public function store(StorePrescriptionRequest $request)
     {
+        $prescription = Prescription::query()->create(['doctor_id' => auth()->user()->id, ...$request->only(['patient_id', 'pharmacist_id', 'diagnosis', 'notes'])]);
+        return redirect(route('prescriptions.show', $prescription->id));
     }
 
     /**
@@ -46,7 +64,7 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription)
     {
-        return view('prescriptions.show', ['prescription' => $prescription]);
+        return view('prescriptions.show', ['prescription' => $prescription, 'medications' => $prescription->medications()->paginate()]);
     }
 
     /**

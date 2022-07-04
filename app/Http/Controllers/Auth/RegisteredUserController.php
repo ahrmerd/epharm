@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register', ['user_types' => User::$user_types]);
+        return view('auth.register', ['user_types' => User::USER_TYPES]);
     }
 
     /**

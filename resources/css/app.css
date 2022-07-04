@@ -1,3 +1,91 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .link-btn {
+        @apply text-sm font-medium text-white hover:underline dark:text-blue-500 p-2 rounded ml-2 bg-blue-500;
+    }
+    .custom-table {
+        @apply block overflow-x-auto whitespace-nowrap m-auto w-fit;
+    }
+    .custom-table td,
+    .custom-table th {
+        @apply p-3 text-center capitalize;
+    }
+
+    .form-section {
+        @apply flex flex-wrap gap-4 items-center m-auto mt-5 w-10/12 border-2 border-blue-500 rounded-md p-4;
+    }
+}
+
+@layer base {
+    a {
+        @apply text-sm font-medium text-blue-500;
+    }
+}
+
+.responsive-table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+.responsive-table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 0.35em;
+}
+.responsive-table th,
+.responsive-table td {
+    padding: 0.625em;
+    text-align: center;
+}
+.responsive-table th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px) {
+    .responsive-table {
+        border: 0;
+    }
+
+    .responsive-table thead {
+        border: none;
+        /* clip: rect(0 0 0 0); */
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .responsive-table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 0.625em;
+    }
+
+    .responsive-table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: 0.8em;
+        text-align: right;
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .responsive-table td:last-child {
+        border-bottom: 0;
+    }
+}

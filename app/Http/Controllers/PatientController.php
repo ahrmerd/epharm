@@ -5,9 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use Illuminate\Database\Eloquent\Collection;
 
 class PatientController extends Controller
 {
+
+    private function getPatients()
+    {
+        $search = request('search');
+        $patients = Patient::query()->when(
+            $search,
+            fn ($query) =>
+            $query->where('first_name', 'ilike', '%' . $search . '%')
+                ->orWhere('last_name', 'ilike', '%' . $search . '%')
+                ->orWhere('phone', 'ilike', '%' . $search . '%')
+                ->orWhere('email', 'ilike', '%' . $search . '%'),
+        );
+        return $patients->latest()->paginate();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +30,7 @@ class PatientController extends Controller
      */
     public function index()
     {
-        return view('patients.index', ['patients' => Patient::all()]);
+        return view('patients.index', ['patients' => $this->getPatients()]);
     }
 
     /**
@@ -25,7 +40,20 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patients.create');
+
+        return view('patients.create', ['genders' => Patient::GENDERS, 'blood_groups' => Patient::BLOODGROUPS, 'blood_genotypes' => Patient::BLOODGENOTYPES]);
+    }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createPrescription($patient)
+    {
+        $patient = Patient::query()->findOrFail($patient);
+        return view('prescriptions.create', ['patient' => $patient]);
     }
 
     /**
@@ -36,7 +64,14 @@ class PatientController extends Controller
      */
     public function store(StorePatientRequest $request)
     {
-        //
+        Patient::create($request->only(
+            [
+                'first_name', 'last_name', 'birth_date',
+                'gender', 'blood_group', 'blood_genotype',
+                'allergies', 'email', 'phone', 'address'
+            ]
+        ));
+        return redirect(route('patients.index'));
     }
 
     /**

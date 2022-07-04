@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use \Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -18,7 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    static $user_types = ['doctor' => 1, 'pharmacist' => 2, 'receptionist' => 3];
+    const USER_TYPES = ['doctor' => 1, 'pharmacist' => 2, 'receptionist' => 3];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,42 +48,53 @@ class User extends Authenticatable
 
     public function prescriptions()
     {
-        if ($this->user_type == $this->user_types['doctor']) {
+        if ($this->isDoctor()) {
             return $this->hasMany(Prescription::class, 'doctor_id');
-        } else if ($this->user_type == $this->user_types['pharmacist']) {
+        } else if ($this->isPharmacist()) {
             return $this->hasMany(Prescription::class, 'pharmacist_id');
         } else {
-            return null;
+            return Prescription::query();
+            // return new HasMany($this->newQuery(), Prescription::class, '', '');
         }
     }
-
     public function scopeDoctors(Builder $query)
     {
-        $query->where('user_type', '=', $this->user_types['doctor']);
+        $query->where('user_type', '=', $this::USER_TYPES['doctor']);
     }
 
     public function scopePharmacist(Builder $query)
     {
-        $query->where('user_type', '=', $this->user_types['pharmacist']);
+        $query->where('user_type', '=', $this::USER_TYPES['pharmacist']);
     }
 
     public function scopeReceptionist(Builder $query)
     {
-        $query->where('user_type', '=', $this->user_types['receptionist']);
+        $query->where('user_type', '=', $this::USER_TYPES['receptionist']);
     }
 
     public function isDoctor()
     {
-        return $this->user_type == $this->user_types['doctor'];
+        return $this->user_type == $this::USER_TYPES['doctor'];
     }
+
+    public function isDoctorOrPharmacist()
+    {
+        return $this->isDoctor() || $this->isPharmacist();
+    }
+
+    public function getUserType()
+    {
+        return array_flip($this::USER_TYPES)[$this->user_type];
+    }
+
 
     public function isPharmacist()
     {
-        return $this->user_type == $this->user_types['pharmacist'];
+        return $this->user_type == $this::USER_TYPES['pharmacist'];
     }
 
     public function isReceptionist()
     {
-        return $this->user_type == $this->user_types['receptionist'];
+        return $this->user_type == $this::USER_TYPES['receptionist'];
     }
 }

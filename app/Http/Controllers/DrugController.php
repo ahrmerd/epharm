@@ -13,21 +13,23 @@ class DrugController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private function getDrugs()
+    {
+        $search = request('search');
+        $drugs = Drug::query()->when(
+            $search,
+            fn ($query) =>
+            $query->where('name', 'ilike', '%' . $search . '%')->orWhere('brand', 'ilike', '%' . $search . '%'),
+        );
+        return $drugs->latest()->paginate();
+    }
+
     public function index()
     {
 
-        return view('drugs.index', ['drugs' => Drug::all()]);
+        return view('drugs.index', ['drugs' => $this->getDrugs(), 'mode' => 'create', 'drug' => new Drug()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('drugs.create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -37,19 +39,11 @@ class DrugController extends Controller
      */
     public function store(StoreDrugRequest $request)
     {
-        //
+        Drug::create($request->only(['name', 'brand', 'size']));
+        return redirect(route('drugs.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Drug  $drug
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Drug $drug)
-    {
-        return view('drugs.show', ['drug' => $drug]);
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -59,8 +53,9 @@ class DrugController extends Controller
      */
     public function edit(Drug $drug)
     {
-        return view('drugs.edit', ['drug' => $drug]);
+        return view('drugs.index', ['drugs' => $this->getDrugs(), 'mode' => 'edit', 'drug' => $drug]);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -71,7 +66,8 @@ class DrugController extends Controller
      */
     public function update(UpdateDrugRequest $request, Drug $drug)
     {
-        //
+        $drug->update($request->only(['name', 'brand', 'size']));
+        return redirect(route('drugs.index'));
     }
 
     /**
@@ -82,6 +78,10 @@ class DrugController extends Controller
      */
     public function destroy(Drug $drug)
     {
-        //
+        if ($drug->medications()->exists()) {
+            return redirect(route('drugs.index'))->with('delete-message', "unable to delete drug with id $drug->id because the drug is related to a certain medication");
+        }
+        $drug->delete();
+        return redirect(route('drugs.index'));
     }
 }

@@ -15,7 +15,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        return view('appointments.index', ['appointments' => Appointment::all()]);
+        return view('appointments.index', ['appointments' => Appointment::query()->timeLatest()->paginate()]);
     }
 
     /**
@@ -25,7 +25,7 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        return view('appointments.create');
+        return view('appointments.create', ['statuses' => Appointment::APPOINTMENT_STATUSES]);
     }
 
     /**
@@ -36,7 +36,8 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        //
+        $appointment = Appointment::create($request->only(['user_id', 'patient_id', 'status', 'reason', 'date_time']));
+        return redirect(route('appointments.show', $appointment->id));
     }
 
     /**
@@ -58,7 +59,7 @@ class AppointmentController extends Controller
      */
     public function edit(Appointment $appointment)
     {
-        return view('appointments.edit', ['appointment' => $appointment]);
+        return view('appointments.edit', ['appointment' => $appointment, 'statuses' => Appointment::APPOINTMENT_STATUSES]);
     }
 
     /**
@@ -70,7 +71,8 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        //
+        $appointment->update($request->only(['user_id', 'patient_id', 'status', 'reason', 'date_time']));
+        return redirect(route('appointments.show', $appointment->id));
     }
 
     /**
@@ -81,6 +83,7 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        //
+        $appointment->delete();
+        return redirect(route('appointments.index'));
     }
 }

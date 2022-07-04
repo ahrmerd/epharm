@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\{AppointmentController, DashboardController, DrugController, PrescriptionController, PatientController, MedicationController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,12 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name('prescriptions.user');
+Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::resource('drugs', DrugController::class);
+Route::resource('patients', PatientController::class);
+Route::resource('appointments', AppointmentController::class);
+Route::resource('prescriptions', PrescriptionController::class);
 
-require __DIR__.'/auth.php';
+
+Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
+
+// Route::get('/dashboard', function () {
+// });
+
+require __DIR__ . '/auth.php';

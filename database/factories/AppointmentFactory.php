@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\{User, Patient};
+use App\Models\{Appointment, User, Patient};
 use Illuminate\Database\Eloquent\Factories\Factory;
+use PhpParser\Node\Expr\Cast\Array_;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Appointment>
@@ -20,6 +21,7 @@ class AppointmentFactory extends Factory
         return [
             'patient_id' => Patient::factory(),
             'user_id' => User::factory(),
+            'status' => Appointment::APPOINTMENT_TYPES[array_rand(Appointment::APPOINTMENT_TYPES)],
             'date_time' => $this->faker->dateTime(),
             'reason' => $this->faker->sentence(),
         ];

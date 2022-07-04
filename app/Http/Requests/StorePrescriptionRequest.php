@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePrescriptionRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StorePrescriptionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,12 @@ class StorePrescriptionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'patient_id' => ['required', 'exists:patients,id'],
+            'pharmacist_id' => ['required', 'exists:users,id'],
+            'diagnosis' => ['required', 'string'],
+            'notes' => ['nullable', 'string']
+
+
         ];
     }
 }
