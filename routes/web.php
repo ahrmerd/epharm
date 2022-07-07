@@ -18,7 +18,7 @@ Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name(
 Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(route('dashboard'));
 });
 
 Route::resource('drugs', DrugController::class);
