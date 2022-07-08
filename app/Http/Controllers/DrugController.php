@@ -19,7 +19,7 @@ class DrugController extends Controller
         $drugs = Drug::query()->when(
             $search,
             fn ($query) =>
-            $query->where('name', 'ilike', '%' . $search . '%')->orWhere('brand', 'ilike', '%' . $search . '%'),
+            $query->whereLike('name', $search)->whereLike('brand', $search),
         );
         return $drugs->latest()->paginate();
     }

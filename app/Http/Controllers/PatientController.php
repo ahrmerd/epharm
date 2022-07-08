@@ -16,10 +16,10 @@ class PatientController extends Controller
         $patients = Patient::query()->when(
             $search,
             fn ($query) =>
-            $query->where('first_name', 'ilike', '%' . $search . '%')
-                ->orWhere('last_name', 'ilike', '%' . $search . '%')
-                ->orWhere('phone', 'ilike', '%' . $search . '%')
-                ->orWhere('email', 'ilike', '%' . $search . '%'),
+            $query->whereLike('first_name', $search)
+                ->whereLike('last_name', $search)
+                ->whereLike('phone', $search)
+                ->whereLike('email', $search),
         );
         return $patients->latest()->paginate();
     }
@@ -82,7 +82,8 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        return view('patients.show', ['patient' => $patient]);
+        return "in development";
+        // return view('patients.show', ['patient' => $patient]);
     }
 
     /**
@@ -116,6 +117,6 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        return $patient->delete();
     }
 }
