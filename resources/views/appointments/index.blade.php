@@ -22,7 +22,7 @@
             @if ($appointments->isEmpty())
                 <div class=" mt-10 flex flex-col items-center justify-center">
                     <p>There are no appointments yet, add the first one!</p>
-                    <a href="">
+                    <a href="{{ route('appointments.create') }}">
                         <button
                             class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
                             appointment

@@ -44,7 +44,7 @@
                 </div>
 
                 <x-button class="m-auto mt-8">
-                    Add Patient
+                    Add Appointments
                 </x-button>
             </div>
         </form>

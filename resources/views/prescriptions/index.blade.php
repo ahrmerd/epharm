@@ -32,7 +32,7 @@
             @if ($prescriptions->isEmpty())
                 <div class=" mt-10 flex flex-col items-center justify-center">
                     <p>There are no prescriptions yet, let's add the first one!</p>
-                    <a href="">
+                    <a href="{{ route('prescriptions.create') }}">
                         <button
                             class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
                             Prescription

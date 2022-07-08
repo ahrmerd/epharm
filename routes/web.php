@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name('prescriptions.user');
-Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create');
+Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name('prescriptions.user')->middleware('auth');
+Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create')->middleware('auth');
 
 Route::get('/', function () {
     return redirect(route('dashboard'));
 });
 
-Route::resource('drugs', DrugController::class);
-Route::resource('patients', PatientController::class);
-Route::resource('appointments', AppointmentController::class);
-Route::resource('prescriptions', PrescriptionController::class);
+Route::resource('drugs', DrugController::class)->middleware('auth');
+Route::resource('patients', PatientController::class)->middleware('auth');
+Route::resource('appointments', AppointmentController::class)->middleware('auth');
+Route::resource('prescriptions', PrescriptionController::class)->middleware('auth');
 
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
