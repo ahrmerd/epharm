@@ -26,11 +26,11 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
-            'patient_id' => ['required', 'exists:patients,id'],
-            'date_time' => ['required', 'date'],
-            'status' => ['required', 'string', 'max:255', Rule::in(Appointment::APPOINTMENT_STATUSES)],
-            'reason' => ['required', 'string']
+            'user_id' => ['nullable', 'exists:users,id'],
+            'patient_id' => ['nullable', 'exists:patients,id'],
+            'date_time' => ['nullable', 'date'],
+            'status' => ['required', 'numeric', 'max:255', Rule::in(Appointment::APPOINTMENT_STATUSES)],
+            'reason' => ['nullable', 'string']
         ];
     }
 }

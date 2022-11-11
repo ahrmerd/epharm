@@ -36,7 +36,9 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
+        // dump('ok');
         $appointment = Appointment::create($request->only(['user_id', 'patient_id', 'status', 'reason', 'date_time']));
+        // dump('done');
         return redirect(route('appointments.show', $appointment->id));
     }
 

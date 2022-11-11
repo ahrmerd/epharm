@@ -21,6 +21,8 @@ Route::get('/', function () {
     return redirect(route('dashboard'));
 });
 
+// Route::post('appointments', [AppointmentController::class, 'store']);
+
 Route::resource('drugs', DrugController::class)->middleware('auth');
 Route::resource('patients', PatientController::class)->middleware('auth');
 Route::resource('appointments', AppointmentController::class)->middleware('auth');

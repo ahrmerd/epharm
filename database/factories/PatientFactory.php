@@ -24,7 +24,7 @@ class PatientFactory extends Factory
             'blood_group' => $this->faker->randomElement(Patient::BLOODGROUPS),
             'blood_genotype' => $this->faker->randomElement(Patient::BLOODGENOTYPES),
             'gender' => $this->faker->randomElement(Patient::GENDERS),
-            'phone' => $this->faker->phoneNumber(),
+            'phone' => '+2349012345678',
             'email' => $this->faker->email(),
             'address' => $this->faker->address()
         ];

@@ -24,8 +24,14 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
-        ]);
+            'first_name' => 'first name',
+            'last_name' => 'last name',
+            'username' => 'username',
+            'phone' => '+2349030685318',
+            'address' => 'some place',
+            'user_type' => 1
 
+        ]);
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }

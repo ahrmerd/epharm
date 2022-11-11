@@ -21,7 +21,7 @@ class AppointmentFactory extends Factory
         return [
             'patient_id' => Patient::factory(),
             'user_id' => User::factory(),
-            'status' => Appointment::APPOINTMENT_TYPES[array_rand(Appointment::APPOINTMENT_TYPES)],
+            'status' => Appointment::APPOINTMENT_STATUSES[array_rand(Appointment::APPOINTMENT_STATUSES)],
             'date_time' => $this->faker->dateTime(),
             'reason' => $this->faker->sentence(),
         ];
