@@ -82,8 +82,8 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        return "in development";
-        // return view('patients.show', ['patient' => $patient]);
+        // return "in development";
+        return view('patients.show', ['patient' => $patient->load(['prescriptions', 'appointments'])]);
     }
 
     /**
@@ -94,7 +94,7 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        return view('patients.edit', ['patient' => $patient]);
+        return view('patients.edit', ['patient' => $patient, 'genders' => Patient::GENDERS, 'blood_groups' => Patient::BLOODGROUPS, 'blood_genotypes' => Patient::BLOODGENOTYPES]);
     }
 
     /**
@@ -106,7 +106,14 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        //
+        $patient->update($request->only(
+            [
+                'first_name', 'last_name', 'birth_date',
+                'gender', 'blood_group', 'blood_genotype',
+                'allergies', 'email', 'phone', 'address'
+            ]
+        ));
+        return redirect(route('patients.show', $patient->id));
     }
 
     /**

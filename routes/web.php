@@ -1,6 +1,15 @@
 <?php
 
-use App\Http\Controllers\{AppointmentController, DashboardController, DrugController, PrescriptionController, PatientController, MedicationController};
+use App\Http\Controllers\{
+    AppointmentController,
+    DashboardController,
+    DrugController,
+    PrescriptionController,
+    PatientController,
+    MedicationController,
+    NotificationController,
+    UserController,
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +24,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name('prescriptions.user')->middleware('auth');
+Route::get('appointments/user', [AppointmentController::class, 'user'])->name('appointments.user')->middleware('auth');
+Route::get('users/user', [UserController::class, 'user'])->name('users.user')->middleware('auth');
+Route::post('users/{user}/promote', [UserController::class, 'promoteToAdmin'])->name('users.promote')->middleware('auth');
+Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password')->middleware('auth');
 Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create')->middleware('auth');
+Route::post('prescription/{prescription}', [PrescriptionController::class, 'notify'])->name('prescriptions.notify');
+Route::get('notifications', NotificationController::class)->middleware('auth')->name('notifications');
 
 Route::get('/', function () {
     return redirect(route('dashboard'));
@@ -27,6 +42,8 @@ Route::resource('drugs', DrugController::class)->middleware('auth');
 Route::resource('patients', PatientController::class)->middleware('auth');
 Route::resource('appointments', AppointmentController::class)->middleware('auth');
 Route::resource('prescriptions', PrescriptionController::class)->middleware('auth');
+Route::resource('medications', MedicationController::class)->middleware('auth');
+Route::resource('users', UserController::class)->middleware('auth');
 
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');

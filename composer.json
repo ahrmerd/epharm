@@ -10,7 +10,14 @@
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^2.10"
+        "livewire/livewire": "^2.10",
+        "nyholm/psr7": "^1.5",
+        "php-http/httplug": "^2.3",
+        "php-http/message-factory": "^1.0",
+        "symfony/http-client": "^6.1",
+        "twilio/sdk": "^6.43",
+        "vonage/client-core": "^3.1",
+        "vonage/vonage-laravel": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

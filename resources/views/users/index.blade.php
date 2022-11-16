@@ -1,12 +1,13 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Patients
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            Users
         </h2>
-        <a href="{{ route('patients.create') }}">
-            <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add Patient</button>
-        </a>
+        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
     </x-slot>
+
     <div class="container">
         <form action="" class="flex items-center justify-center mt-4">
             <input type="text" name="search" placeholder="search" class="rounded">
@@ -18,11 +19,11 @@
             </button>
         </form>
 
-        <div class="patients">
-            @if ($patients->isEmpty())
+        <div class="users">
+            @if ($users->isEmpty())
                 <div class=" mt-10 flex flex-col items-center justify-center">
-                    <p>There are no patients yet, add the first one!</p>
-                    <a href="{{ route('patients.create') }}">
+                    <p>There are no users yet, add the first one!</p>
+                    <a href="{{ route('users.create') }}">
                         <button
                             class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
                             Patient
@@ -36,31 +37,31 @@
                             <th>id</th>
                             <th>first name</th>
                             <th>last name</th>
-                            <th>gender</th>
-                            <th>Date of Birth</th>
+                            <th>email</th>
+                            <th>user type</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($patients as $patient)
+                        @foreach ($users as $user)
                             <tr>
                                 <td>
-                                    Patient--{{ $patient->id }}
+                                    user--{{ $user->id }}
                                 </td>
                                 <td>
-                                    {{ $patient->first_name }}
+                                    {{ $user->first_name }}
                                 </td>
                                 <td>
-                                    {{ $patient->last_name }}
+                                    {{ $user->last_name }}
+                                </td>
+                                <td class="truncate">
+                                    {{ $user->email }}
                                 </td>
                                 <td>
-                                    {{ $patient->gender }}
-                                </td>
-                                <td>
-                                    {{ $patient->birth_date }}
+                                    {{ $types[$user->user_type] }}
                                 </td>
                                 <td class="flex">
-                                    <a href="{{ route('patients.show', $patient->id) }}">
+                                    <a href="{{ route('users.show', $user->id) }}">
                                         <svg class="scale-50 fill-blue-400" xmlns="http://www.w3.org/2000/svg"
                                             height="48" width="48">
                                             <path
@@ -68,7 +69,7 @@
                                         </svg>
                                     </a>
 
-                                    <form action="{{ route('patients.destroy', $patient->id) }}" method="POST">
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit">
@@ -87,7 +88,7 @@
                     </tbody>
 
                 </table>
-                {{ $patients->links() }}
+                {{ $users->links() }}
             @endif
 
         </div>

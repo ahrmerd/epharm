@@ -9,22 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function __invoke(Request $request)
     {
-        return view('dashboard', ['appointments' => $this->getAppointments(), 'drugs' => $this->getDrugs(), 'prescriptions' => $this->getPrescriptions(), 'user' => Auth::user()]);
+        return view('dashboard', [
+            'appointments' => $this->getAppointments(),
+            'drugs' => $this->getDrugs(),
+            'prescriptions' => $this->getPrescriptions(),
+            'user' => Auth::user()
+        ]);
     }
 
     public function getDrugs()
     {
         return Drug::query()->latest()->take(5)->get();
     }
-
 
     public function getPrescriptions()
     {
@@ -33,7 +32,6 @@ class DashboardController extends Controller
             $user->prescriptions()->latest()->take(5)->get()
             : Prescription::query()->latest()->take(5)->get();
     }
-
 
     public function getAppointments()
     {

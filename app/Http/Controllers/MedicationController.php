@@ -36,7 +36,9 @@ class MedicationController extends Controller
      */
     public function store(StoreMedicationRequest $request)
     {
-        //
+        // dump($request->only(['drug_id', 'prescription_id', 'dosage', 'notes']));
+        Medication::query()->create($request->only(['drug_id', 'prescription_id', 'dosage', 'notes']));
+        return redirect(route('prescriptions.show', $request->input('prescription_id')));
     }
 
     /**
@@ -70,6 +72,9 @@ class MedicationController extends Controller
      */
     public function update(UpdateMedicationRequest $request, Medication $medication)
     {
+        $medication->update($request->only(['drug_id', 'dosage', 'notes']));
+
+        return redirect(route('prescriptions.show', $medication->prescription->id));
     }
 
     /**
@@ -80,6 +85,7 @@ class MedicationController extends Controller
      */
     public function destroy(Medication $medication)
     {
-        //
+        $medication->delete();
+        return redirect(route('prescriptions.show', $medication->prescription->id));
     }
 }

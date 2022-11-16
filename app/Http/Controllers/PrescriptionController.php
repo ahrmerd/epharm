@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Http\Requests\UpdatePrescriptionRequest;
+use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\User;
+use App\Services\NotificationService;
+use App\Services\SMSService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PrescriptionController extends Controller
 {
+
+    /**
+     * Class constructor.
+     */
+    public function __construct(private SMSService $smsService, private NotificationService $notifier)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +53,11 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
-        return view('prescriptions.create', ['patient' => null]);
+        $patient = null;
+        request()->whenHas('patient_id', function ($value) use (&$patient) {
+            $patient = Patient::query()->find($value);
+        });
+        return view('prescriptions.create', ['patient' => $patient]);
     }
 
     /**
@@ -53,6 +69,7 @@ class PrescriptionController extends Controller
     public function store(StorePrescriptionRequest $request)
     {
         $prescription = Prescription::query()->create(['doctor_id' => auth()->user()->id, ...$request->only(['patient_id', 'pharmacist_id', 'diagnosis', 'notes'])]);
+        $this->notifier->prescriptionNotification($prescription);
         return redirect(route('prescriptions.show', $prescription->id));
     }
 
@@ -87,7 +104,19 @@ class PrescriptionController extends Controller
      */
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
-        //
+        $prescription->update($request->only(['pharmacist_id', 'diagnosis', 'notes']));
+        $this->notifier->prescriptionNotification($prescription);
+        return redirect(route('prescriptions.show', $prescription->id));
+    }
+
+
+    public function notify(Prescription $prescription)
+    {
+        if ($this->smsService->sendMedicationSMS($prescription)) {
+            return redirect()->back()->with('notice', 'Reminder Sent successfully');
+        } else {
+            return redirect()->back()->withErrors(['sms error', 'Something went wrong. Please try again.']);
+        }
     }
 
     /**
@@ -98,6 +127,7 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
-        //
+        $prescription->delete();
+        return redirect(route('prescriptions.index'));
     }
 }

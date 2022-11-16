@@ -17,6 +17,14 @@
     .form-section {
         @apply flex flex-wrap gap-4 items-center m-auto mt-5 w-10/12 border-2 border-blue-500 rounded-md p-4;
     }
+
+    .section {
+        @apply flex flex-wrap gap-4 m-auto mt-5 w-10/12 border-2 border-blue-500 rounded-md p-4;
+    }
+
+    .badge {
+        @apply inline-block py-1 px-2 text-center align-baseline font-bold bg-red-600 text-white rounded-xl ml-1;
+    }
 }
 
 @layer base {

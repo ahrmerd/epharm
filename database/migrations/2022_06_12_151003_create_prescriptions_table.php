@@ -16,10 +16,11 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->references('id')->on('users');
-            $table->foreignId('pharmacist_id')->references('id')->on('users');
+            $table->foreignId('doctor_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('pharmacist_id')->references('id')->on('users')->cascadeOnUpdate();
             $table->foreignIdFor(Patient::class);
             $table->string('diagnosis');
+            $table->dateTime('last_sms')->nullable();
             $table->string('notes')->nullable();
             $table->timestamps();
         });

@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
+use App\Models\Patient;
+use App\Models\User;
+use App\Services\NotificationService;
 
 class AppointmentController extends Controller
 {
+
+    /**
+     * Class constructor.
+     */
+    public function __construct(private NotificationService $notifier)
+    {
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,6 +28,13 @@ class AppointmentController extends Controller
         return view('appointments.index', ['appointments' => Appointment::query()->timeLatest()->paginate()]);
     }
 
+
+    public function user()
+    {
+        return view('appointments.index', ['appointments' => auth()->user()->appointments()->paginate()]);
+        // return view('prescriptions.index', ['user' => $user, 'prescriptions' => $user->isDoctorOrPharmacist() ? auth()->user()->prescriptions()->paginate() : new Collection([])]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -25,7 +42,19 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        return view('appointments.create', ['statuses' => Appointment::APPOINTMENT_STATUSES]);
+        // $user = null;
+        $with = [
+            'statuses' => Appointment::APPOINTMENT_STATUSES,
+            'user' => null,
+            'patient' => null
+        ];
+        request()->whenHas('user_id', function ($value) use (&$with) {
+            $with['user'] = User::query()->find($value);
+        });
+        request()->whenHas('patient_id', function ($value) use (&$with) {
+            $with['patient'] = Patient::query()->find($value);
+        });
+        return view('appointments.create', $with);
     }
 
     /**
@@ -39,6 +68,7 @@ class AppointmentController extends Controller
         // dump('ok');
         $appointment = Appointment::create($request->only(['user_id', 'patient_id', 'status', 'reason', 'date_time']));
         // dump('done');
+        $this->notifier->appointmentNotification($appointment);
         return redirect(route('appointments.show', $appointment->id));
     }
 
@@ -74,6 +104,7 @@ class AppointmentController extends Controller
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
         $appointment->update($request->only(['user_id', 'patient_id', 'status', 'reason', 'date_time']));
+        $this->notifier->appointmentNotification($appointment);
         return redirect(route('appointments.show', $appointment->id));
     }
 

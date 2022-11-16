@@ -16,10 +16,10 @@
                 {{-- user_id, patient_id, date_time, status, resaon --}}
 
                 <!-- user -->
-                <livewire:user-search :user="null" model="Appointment" />
+                <livewire:user-search :user="$user" model="Appointment" />
 
                 <!-- patient -->
-                <livewire:patient-search :patient="null" model="Appointment" />
+                <livewire:patient-search :patient="$patient" model="Appointment" />
 
 
                 {{-- date_time --}}

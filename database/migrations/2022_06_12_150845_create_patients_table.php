@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('blood_group');
             $table->string('blood_genotype');
-            $table->string('allergies')->default('none');
+            $table->string('allergies')->nullable()->default('none');
             $table->string('email');
             $table->string('phone');
             $table->string('address');
