@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Appointment, Drug, Patient, Prescription, User};
+use App\Models\{Appointment, Drug, Notification, Patient, Prescription, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,8 @@ class DashboardController extends Controller
             'appointments' => $this->getAppointments(),
             'drugs' => $this->getDrugs(),
             'prescriptions' => $this->getPrescriptions(),
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'notifications_count' => auth()->user()->notifications()->unread()->count()
         ]);
     }
 

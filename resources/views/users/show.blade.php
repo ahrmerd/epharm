@@ -8,7 +8,6 @@
     <div class="container section capitalize flex-col">
 
         <h3 class="basis-full font-bold">User Information
-            {{ !Auth::user()->is_admin }}
 
         </h3>
         <a class="basis-full font-bold" href="{{ route('users.edit', $user->id) }}">
@@ -16,7 +15,7 @@
                 User</button>
         </a>
         <div class="">
-            <span class="font-semibold">{{ $user->is_admin ? 'Admin' : 'User' }}
+            <span class="font-semibold">{{ $user->is_admin ? 'Admin' : '' }}
                 @if ($user->is_admin)
                     <svg style="transform: scale(.5); display:inline-block" xmlns="http://www.w3.org/2000/svg"
                         height="48" width="48">
@@ -57,10 +56,12 @@
             <span>: {{ $user->address }} </span>
         </div>
 
-        <form action="{{ route('users.promote', $user->id) }}" method="POST">
-            @csrf<button type="submit" class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Promote
-                User</button>
-        </form>
+        @can('promote', App\Models\User::class)
+            <form action="{{ route('users.promote', $user->id) }}" method="POST">
+                @csrf<button type="submit" class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Promote
+                    User</button>
+            </form>
+        @endcan
 
         @livewire('change-password', ['user' => $user], key($user->id))
 

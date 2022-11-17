@@ -21,6 +21,7 @@ class PrescriptionController extends Controller
      */
     public function __construct(private SMSService $smsService, private NotificationService $notifier)
     {
+        $this->authorizeResource(Prescription::class, 'prescription');
     }
 
     /**

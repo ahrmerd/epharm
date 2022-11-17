@@ -9,10 +9,12 @@ use App\Models\Drug;
 class DrugController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Class constructor.
      */
+    public function __construct()
+    {
+        $this->authorizeResource(Drug::class, 'drug');
+    }
     private function getDrugs()
     {
         $search = request('search');
@@ -24,6 +26,11 @@ class DrugController extends Controller
         return $drugs->latest()->paginate();
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
 

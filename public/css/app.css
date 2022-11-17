@@ -1056,6 +1056,9 @@ select {
 .cursor-default {
   cursor: default;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 .list-inside {
   list-style-position: inside;
 }
@@ -1680,10 +1683,6 @@ select {
 
 .hover\:fill-blue-500:hover {
   fill: #3b82f6;
-}
-
-.hover\:fill-slate-800:hover {
-  fill: #1e293b;
 }
 
 .hover\:text-gray-500:hover {

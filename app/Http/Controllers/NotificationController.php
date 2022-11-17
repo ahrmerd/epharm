@@ -16,7 +16,7 @@ class NotificationController extends Controller
     public function __invoke(Request $request)
     {
         $notifications = auth()->user()->notifications()->latest()->paginate();
-        Notification::query()->update(['is_read' => true,]);
+        auth()->user()->notifications()->update(['is_read' => true,]);
         return view('notifications.index', ['notifications' => $notifications]);
     }
 }

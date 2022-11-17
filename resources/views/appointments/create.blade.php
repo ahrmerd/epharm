@@ -16,10 +16,23 @@
                 {{-- user_id, patient_id, date_time, status, resaon --}}
 
                 <!-- user -->
-                <livewire:user-search :user="$user" model="Appointment" />
+                @if (auth()->user()->isAdmin() ||
+                    auth()->user()->isReceptionist())
+                    <livewire:user-search :user="$user" model="Appointment" />
+                @else
+                    {{-- <p> User: {{ auth()->user()->username }}</p> --}}
+                    <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                @endif
 
                 <!-- patient -->
-                <livewire:patient-search :patient="$patient" model="Appointment" />
+                @if ($patient)
+                    <div class="mt-6">
+                        <p> <span>Patient Name: </span> {{ $patient->full_name }}</p>
+                        <input type="hidden" name="patient_id" value="{{ $patient->id }}">
+                    </div>
+                @else
+                    <livewire:patient-search :patient="null" description="Patient: " />
+                @endif
 
 
                 {{-- date_time --}}

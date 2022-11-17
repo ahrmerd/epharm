@@ -20,19 +20,20 @@
         <div class="form-section">
             <p class="text-2xl font-bold basis-full">Status: {{ $appointment->getAppointmentStatus() }}</p>
             <p class="font-semibold">Appointment For :
-                <span class="font-thin text-blue-500 hover:cursor-pointer">{{ $appointment->user->username }}</span>
+                <span class="font-light text-blue-500 hover:cursor-pointer">{{ $appointment->user->username }}</span>
             </p>
             <p class="font-semibold">with :
-                <span class="font-thin text-blue-500 hover:cursor-pointer">{{ $appointment->patient->full_name }}
-                </span>
+                <a href="{{ route('patients.show', $appointment->patient->id) }}"
+                    class="text-blue-700 hover:cursor-pointer">{{ $appointment->patient->full_name }}
+                </a>
             </p>
             <p class="font-semibold">on:
-                <span class="font-thin text-blue-500 hover:cursor-pointer">
+                <span class="font-light text-blue-500 hover:cursor-pointer">
                     {{ \Carbon\Carbon::parse($appointment->date_time)->format('d-m-y h:i A') }}
                 </span>
             </p>
             <p class="font-semibold">because of:
-                <span class="font-thin text-blue-500 hover:cursor-pointer">{{ $appointment->reason }}</span>
+                <span class="font-light text-blue-500 hover:cursor-pointer">{{ $appointment->reason }}</span>
             </p>
         </div>
 

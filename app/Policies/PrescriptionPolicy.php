@@ -4,11 +4,12 @@ namespace App\Policies;
 
 use App\Models\Prescription;
 use App\Models\User;
+use App\Policies\Traits\AdminPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PrescriptionPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, AdminPolicy;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +19,7 @@ class PrescriptionPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +31,7 @@ class PrescriptionPolicy
      */
     public function view(User $user, Prescription $prescription)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,7 +42,7 @@ class PrescriptionPolicy
      */
     public function create(User $user)
     {
-        //
+        return ($user->isDoctor());
     }
 
     /**
@@ -53,7 +54,7 @@ class PrescriptionPolicy
      */
     public function update(User $user, Prescription $prescription)
     {
-        //
+        return ($user->isDoctor() && $prescription->doctor_id == $user->id);
     }
 
     /**
@@ -65,7 +66,7 @@ class PrescriptionPolicy
      */
     public function delete(User $user, Prescription $prescription)
     {
-        //
+        // return ($user->isDoctor());
     }
 
     /**
@@ -89,6 +90,6 @@ class PrescriptionPolicy
      */
     public function forceDelete(User $user, Prescription $prescription)
     {
-        //
+        // return ($user->isDoctor());
     }
 }

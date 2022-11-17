@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'user_type' => $request->user_type,
-            'is_admin' => true,
+            'is_admin' => false,
             'password' => Hash::make($request->password),
         ]);
 

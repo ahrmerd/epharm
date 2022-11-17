@@ -9,6 +9,13 @@ use App\Models\Medication;
 class MedicationController extends Controller
 {
     /**
+     * Class constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Medication::class, 'medication');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

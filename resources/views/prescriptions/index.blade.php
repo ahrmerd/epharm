@@ -3,9 +3,11 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Prescription
         </h2>
-        <a href="{{ route('prescriptions.create') }}">
-            <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add Prescription</button>
-        </a>
+        @can('create', App\Models\Prescription::class)
+            <a href="{{ route('prescriptions.create') }}">
+                <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add Prescription</button>
+            </a>
+        @endcan
         @if (request()->route()->getName() == 'prescriptions.index')
             <a href="{{ route('prescriptions.user') }}">
                 <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">My Prescriptions</button>
@@ -31,13 +33,17 @@
         <div class="patients w-10/12 mx-auto">
             @if ($prescriptions->isEmpty())
                 <div class=" mt-10 flex flex-col items-center justify-center">
-                    <p>There are no prescriptions yet, let's add the first one!</p>
-                    <a href="{{ route('prescriptions.create') }}">
-                        <button
-                            class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
-                            Prescription
-                        </button>
-                    </a>
+                    <p>There are no prescriptions yet</p>
+                    @can('create', App\Models\Prescription::class)
+                        <a href="{{ route('prescriptions.create') }}">
+                            <button
+                                class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
+                                Prescription
+                            </button>
+                        </a>
+                    @else
+                    @endcan
+                    <p>a doctor needs to create a prescription first</p>
                 </div>
             @else
                 <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">

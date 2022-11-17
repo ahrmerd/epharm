@@ -4,21 +4,16 @@ namespace App\Policies;
 
 use App\Models\Patient;
 use App\Models\User;
+use App\Policies\Traits\AdminPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PatientPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, AdminPolicy;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +25,7 @@ class PatientPolicy
      */
     public function view(User $user, Patient $patient)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,7 +36,7 @@ class PatientPolicy
      */
     public function create(User $user)
     {
-        //
+        return ($user->isReceptionist());
     }
 
     /**
@@ -53,7 +48,7 @@ class PatientPolicy
      */
     public function update(User $user, Patient $patient)
     {
-        //
+        return ($user->isReceptionist());
     }
 
     /**

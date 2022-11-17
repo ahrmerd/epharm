@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('blood_group');
             $table->string('blood_genotype');
+            $table->timestamp('phone_verified_at')->nullable();
             $table->string('allergies')->nullable()->default('none');
             $table->string('email');
             $table->string('phone');

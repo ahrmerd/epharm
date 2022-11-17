@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Services;
+
+use Twilio\Rest\Client;
+
+class SMSService
+{
+    /**
+     * Class constructor.
+     */
+    private $client;
+    private $num;
+    private $MserviceSID;
+    private $VserviceSID;
+    public function __construct()
+    {
+        $client = new Client(
+            new \Vonage\Client\Credentials\Basic($VONAGE_KEY, $VONAGE_SECRET),
+        );
+        // $this->MserviceSID = getenv("TWILO_MESSAGING_SERVICE_SID");
+        // $this->client = new Client(getenv("TWILIO_SID"), getenv("TWILIO_TOKEN"));
+        // $this->num = getenv("TWILIO_FROM");
+        // $this->VserviceSID = getenv("TWILO_VERIFICATION_SERVICE_SID");
+    }
+
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    public function checkverify($number, $code)
+    {
+        return $this->client->verify->v2->services($this->VserviceSID)->verificationChecks->create(['to' => $number, 'code' => $code]);
+        // return $this->client->validationRequests->create($number, ['friendlyName' => $name]);
+    }
+
+    public function sendSMS()
+    {
+
+
+        return $this->client->messages->create("+2349133603314", ["messagingServiceSid" => env('TWILO_MESSAGING_SERVICE_SID'), 'body' => 'Test message using PHP client']);
+    }
+
+    public function verifyphone($name, $number)
+    {
+        dump($this->MserviceSID);
+        return $this->client->verify->v2->services($this->VserviceSID)->verifications->create($number, 'sms');
+        // return $this->client->validationRequests->create($number, ['friendlyName' => $name]);
+    }
+}

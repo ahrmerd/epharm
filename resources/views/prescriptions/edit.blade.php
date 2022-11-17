@@ -20,7 +20,7 @@
                 <!-- patient -->
 
                 <p>for {{ $prescription->patient->full_name }}</p>
-                <input type="hidden" name="patient_id" value="{{ $patient->id }}">
+                <input type="hidden" name="patient_id" value="{{ $prescription->patient->id }}">
                 <!-- user -->
                 <livewire:pharmacist-search name="pharmacist_id" :user="$prescription->pharmacist" model="Pharmacist"
                     description="involved" />

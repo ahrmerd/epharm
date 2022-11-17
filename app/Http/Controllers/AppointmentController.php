@@ -17,6 +17,7 @@ class AppointmentController extends Controller
      */
     public function __construct(private NotificationService $notifier)
     {
+        $this->authorizeResource(Appointment::class, 'appointment');
     }
     /**
      * Display a listing of the resource.
@@ -31,7 +32,7 @@ class AppointmentController extends Controller
 
     public function user()
     {
-        return view('appointments.index', ['appointments' => auth()->user()->appointments()->paginate()]);
+        return view('appointments.index', ['appointments' => auth()->user()->appointments()->timeLatest()->paginate()]);
         // return view('prescriptions.index', ['user' => $user, 'prescriptions' => $user->isDoctorOrPharmacist() ? auth()->user()->prescriptions()->paginate() : new Collection([])]);
     }
 

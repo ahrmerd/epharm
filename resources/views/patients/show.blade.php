@@ -11,10 +11,20 @@
         {{-- basic information --}}
         <div class="section capitalize">
             <h3 class="basis-full font-bold">Patient Information</h3>
-            <a class="basis-full font-bold" href="{{ route('patients.edit', $patient->id) }}">
-                <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Edit
-                    Patient</button>
-            </a>
+            @can('update', $patient)
+                <a class="basis-full font-bold" href="{{ route('patients.edit', $patient->id) }}">
+                    <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Edit
+                        Patient</button>
+                </a>
+            @endcan
+            @if ($patient->isVerified())
+                <a class="basis-full font-bold" href="{{ route('patients.verify', $patient->id) }}">
+                    <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Verify Patients
+                        Phone
+                        Patient</button>
+                </a>
+            @endif
+
             <div>
                 <span class=" font-semibold">first name</span>
                 <span>: {{ $patient->first_name }} </span>
@@ -61,11 +71,13 @@
         {{-- appointments --}}
         <div class="section">
             <h3 class="basis-full font-bold">Patient Appointments</h3>
-            <a class="basis-full font-bold"
-                href="{{ route('appointments.create', ['patient_id' => $patient->id, 'user_id' => auth()->id()]) }}">
-                <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Make
-                    Appointment With Patient</button>
-            </a>
+            @can('create', \App\Models\Appointment::class)
+                <a class="basis-full font-bold"
+                    href="{{ route('appointments.create', ['patient_id' => $patient->id, 'user_id' => auth()->id()]) }}">
+                    <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Make
+                        Appointment With Patient</button>
+                </a>
+            @endcan
             <div class="appointments">
                 @if ($patient->appointments->isEmpty())
                     <p>This patient has no appointments</p>
@@ -125,47 +137,51 @@
 
 
 
-    </div>
-    <div class="section capitalize">
-        <h3 class="basis-full font-bold">Prescriptions</h3>
-        <a class="basis-full font-bold"
-            href="{{ route('prescriptions.create', ['patient_id' => $patient->id, 'user_id' => auth()->id()]) }}">
-            <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add a
-                Prescription</button>
-        </a>
 
-        <div class="prescriptions w-10/12 mx-auto">
-            @if ($patient->prescriptions->isEmpty())
-                <p>There are no prescriptions yet</p>
-            @else
-                <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                    @foreach ($patient->prescriptions as $prescription)
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center space-x-4">
+        <div class="section capitalize">
+            <h3 class="basis-full font-bold">Prescriptions</h3>
+            @can('create', \App\Models\Prescription::class)
+                <a class="basis-full font-bold"
+                    href="{{ route('prescriptions.create', ['patient_id' => $patient->id, 'user_id' => auth()->id()]) }}">
+                    <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add a
+                        Prescription</button>
+                </a>
+            @endcan
 
-                                <div class="flex-1 min-w-0">
+            <div class="prescriptions w-10/12 mx-auto">
+                @if ($patient->prescriptions->isEmpty())
+                    <p>There are no prescriptions yet</p>
+                @else
+                    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach ($patient->prescriptions as $prescription)
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center space-x-4">
 
-                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        Diagnosis: {{ $prescription->diagnosis }}
-                                    </p>
-                                    <p class="text-sm text-gray-900 truncate dark:text-gray-400">
-                                        Pharmacist involved: {{ $prescription->pharmacist->username }}
-                                    </p>
+                                    <div class="flex-1 min-w-0">
 
-                                    <p class="text-sm text-gray-900 truncate dark:text-gray-400">
-                                        Doctor involved: {{ $prescription->doctor->username }}
-                                    </p>
+                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                            Diagnosis: {{ $prescription->diagnosis }}
+                                        </p>
+                                        <p class="text-sm text-gray-900 truncate dark:text-gray-400">
+                                            Pharmacist involved: {{ $prescription->pharmacist->username }}
+                                        </p>
 
+                                        <p class="text-sm text-gray-900 truncate dark:text-gray-400">
+                                            Doctor involved: {{ $prescription->doctor->username }}
+                                        </p>
+
+                                    </div>
+                                    <a href="{{ route('prescriptions.show', $prescription->id) }}"> view </a>
                                 </div>
-                                <a href="{{ route('prescriptions.show', $prescription->id) }}"> view </a>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+
+            </div>
 
         </div>
-
     </div>
+
 
 </x-app-layout>

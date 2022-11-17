@@ -3,9 +3,11 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Patients
         </h2>
-        <a href="{{ route('patients.create') }}">
-            <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add Patient</button>
-        </a>
+        @can('create', App\Models\Patient::class)
+            <a href="{{ route('patients.create') }}">
+                <button class="px-3 py-2 border rounded-lg hover:bg-slate-600 hover:text-white">Add Patient</button>
+            </a>
+        @endcan
     </x-slot>
     <div class="container">
         <form action="" class="flex items-center justify-center mt-4">
@@ -21,13 +23,17 @@
         <div class="patients">
             @if ($patients->isEmpty())
                 <div class=" mt-10 flex flex-col items-center justify-center">
-                    <p>There are no patients yet, add the first one!</p>
-                    <a href="{{ route('patients.create') }}">
-                        <button
-                            class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
-                            Patient
-                        </button>
-                    </a>
+                    <p>There are no patients yet!</p>
+                    @can('create', App\Models\Patient::class)
+                        <a href="{{ route('patients.create') }}">
+                            <button
+                                class="px-3 py-2 border border-green-500 text-green-500 rounded-lg hover:bg-slate-600 hover:text-white">Add
+                                Patient
+                            </button>
+                        </a>
+                    @else
+                        <p>Contact admin or a receptionist to add patients</p>
+                    @endcan
                 </div>
             @else
                 <table class="custom-table">
@@ -68,18 +74,20 @@
                                         </svg>
                                     </a>
 
-                                    <form action="{{ route('patients.destroy', $patient->id) }}" method="POST">
-                                        @method('DELETE')
-                                        @csrf
-                                        <button type="submit">
-                                            <svg class=" scale-50 fill-red-500" xmlns="http://www.w3.org/2000/svg"
-                                                height="48" width="48">
-                                                <path
-                                                    d="M13.05 42q-1.2 0-2.1-.9-.9-.9-.9-2.1V10.5H8v-3h9.4V6h13.2v1.5H40v3h-2.05V39q0 1.2-.9 2.1-.9.9-2.1.9Zm21.9-31.5h-21.9V39h21.9Zm-16.6 24.2h3V14.75h-3Zm8.3 0h3V14.75h-3Zm-13.6-24.2V39Z" />
-                                            </svg>
-                                        </button>
-                                    </form>
 
+                                    @can('create', App\Models\Patient::class)
+                                        <form action="{{ route('patients.destroy', $patient->id) }}" method="POST">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit">
+                                                <svg class=" scale-50 fill-red-500" xmlns="http://www.w3.org/2000/svg"
+                                                    height="48" width="48">
+                                                    <path
+                                                        d="M13.05 42q-1.2 0-2.1-.9-.9-.9-.9-2.1V10.5H8v-3h9.4V6h13.2v1.5H40v3h-2.05V39q0 1.2-.9 2.1-.9.9-2.1.9Zm21.9-31.5h-21.9V39h21.9Zm-16.6 24.2h3V14.75h-3Zm8.3 0h3V14.75h-3Zm-13.6-24.2V39Z" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

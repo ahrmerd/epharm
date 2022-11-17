@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * Class constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
     public function index()
     {
         return view('users.index', ['users' => User::query()->paginate(), 'types' => array_flip(User::USER_TYPES)]);
@@ -41,8 +49,13 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+
+
+
     public function promoteToAdmin(User $user)
     {
+        $this->authorize('promote', User::class);
+        Gate::allowIf(auth()->user()->isAdmin());
         $user->update(['is_admin' => true]);
         return redirect()->back();
     }
@@ -50,6 +63,7 @@ class UserController extends Controller
 
     public function changePassword(Request $request, User $user)
     {
+        $this->authorize('update', $user);
 
         $request->validate([
             'password' => ['required', 'confirmed', Rules\Password::min(4)],

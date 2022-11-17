@@ -14,12 +14,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
     const USER_TYPES = ['doctor' => 1, 'pharmacist' => 2, 'receptionist' => 3];
 
     /**
@@ -41,6 +35,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
+    }
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Appointment;
 use App\Models\User;
 use App\Policies\Traits\AdminPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AppointmentPolicy
+class UserPolicy
 {
     use HandlesAuthorization, AdminPolicy;
 
@@ -26,12 +25,12 @@ class AppointmentPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Appointment  $appointment
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Appointment $appointment)
+    public function view(User $user, User $model)
     {
-        return ($user->isReceptionist() || $appointment->user_id == $user->id);
+        return ($user->id == $model->id);
     }
 
     /**
@@ -42,41 +41,45 @@ class AppointmentPolicy
      */
     public function create(User $user)
     {
-        return true;
+        //
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Appointment  $appointment
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Appointment $appointment)
+    public function update(User $user, User $model)
     {
-        return ($user->isReceptionist() || $appointment->user_id == $user->id);
+        return ($user->id == $model->id);
+    }
+
+    public function promote(User $user)
+    {
+        return ($user->isAdmin());
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Appointment  $appointment
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Appointment $appointment)
+    public function delete(User $user, User $model)
     {
-        return ($appointment->user_id == $user->id);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Appointment  $appointment
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Appointment $appointment)
+    public function restore(User $user, User $model)
     {
         //
     }
@@ -85,11 +88,10 @@ class AppointmentPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Appointment  $appointment
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Appointment $appointment)
+    public function forceDelete(User $user, User $model)
     {
-        return ($appointment->user_id == $user->id);
     }
 }

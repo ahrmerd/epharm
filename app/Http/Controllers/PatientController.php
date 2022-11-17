@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PatientController extends Controller
 {
+    /**
+     * Class constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Patient::class, 'patient');
+    }
 
     private function getPatients()
     {
@@ -53,6 +60,7 @@ class PatientController extends Controller
     public function createPrescription($patient)
     {
         $patient = Patient::query()->findOrFail($patient);
+        $this->authorize('create', Prescription::class);
         return view('prescriptions.create', ['patient' => $patient]);
     }
 
@@ -114,6 +122,12 @@ class PatientController extends Controller
             ]
         ));
         return redirect(route('patients.show', $patient->id));
+    }
+
+    public function verify(Patient $patient)
+    {
+
+        return view('patients.verify');
     }
 
     /**

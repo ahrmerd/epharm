@@ -4,12 +4,14 @@ use App\Http\Controllers\{
     AppointmentController,
     DashboardController,
     DrugController,
+    InstallationController,
     PrescriptionController,
     PatientController,
     MedicationController,
     NotificationController,
     UserController,
 };
+use App\Services\TwiloService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,11 +25,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('install', [InstallationController::class, 'index'])->name('install');
+Route::post('install/admin', [InstallationController::class, 'createAdmin'])->name('install.admin');
+Route::post('install/migrate', [InstallationController::class, 'migrate'])->name('install.migrate');
+Route::post('install/migrate-fresh', [InstallationController::class, 'migrateFresh'])->name('install.migrate-fresh');
+
+
 Route::get('prescriptions/user', [PrescriptionController::class, 'user'])->name('prescriptions.user')->middleware('auth');
 Route::get('appointments/user', [AppointmentController::class, 'user'])->name('appointments.user')->middleware('auth');
+
 Route::get('users/user', [UserController::class, 'user'])->name('users.user')->middleware('auth');
 Route::post('users/{user}/promote', [UserController::class, 'promoteToAdmin'])->name('users.promote')->middleware('auth');
 Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password')->middleware('auth');
+Route::get('patients/{patient}/verify', [PatientController::class, 'verify'])->name('patients.verify')->middleware('auth');
 Route::get('patients/{id}/prescriptions', [PatientController::class, 'createPrescription'])->name('patients.prescriptions.create')->middleware('auth');
 Route::post('prescription/{prescription}', [PrescriptionController::class, 'notify'])->name('prescriptions.notify');
 Route::get('notifications', NotificationController::class)->middleware('auth')->name('notifications');
